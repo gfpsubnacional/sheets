@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario a Google Sheets</title>
+</head>
+<body>
+    <h2>Enviar datos a Google Sheets</h2>
+    <form id="formulario">
+        <input type="text" id="nombre" placeholder="Nombre" required><br>
+        <input type="email" id="email" placeholder="Email" required><br>
+        <textarea id="mensaje" placeholder="Mensaje" required></textarea><br>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <h2>Datos Recibidos</h2>
+    <button onclick="obtenerDatos()">Actualizar</button>
+    <pre id="datos"></pre>
+
+    <script>
+        const url = "https://script.google.com/a/macros/gfpsubnacional.pe/s/AKfycbzalct79eGzDECDce05BfKH8bs4FbqSGGfwj5B_Zx4gbesPLl-YZBM00O40OifHAzG9jA/exec";  // Reemplaza con la URL de tu script
+
+        document.getElementById("formulario").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            let data = {
+                nombre: document.getElementById("nombre").value,
+                email: document.getElementById("email").value,
+                mensaje: document.getElementById("mensaje").value
+            };
+            let response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "application/json" }
+            });
+            let result = await response.text();
+            alert(result);
+        });
+
+        async function obtenerDatos() {
+            let response = await fetch(url);
+            let data = await response.json();
+            document.getElementById("datos").textContent = JSON.stringify(data, null, 2);
+        }
+    </script>
+</body>
+</html>
